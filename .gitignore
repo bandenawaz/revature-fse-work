@@ -1,0 +1,56 @@
+### 1. Compiled Java code (The Artifacts) ###
+*.class
+*.jar
+*.war
+*.ear
+
+### 2. Logs and databases ###
+*.log
+*.sql
+*.sqlite
+
+### 3. OS generated files ###
+.DS_Store
+Thumbs.db
+
+### 4. IDE specific files ###
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+### 5. Dependency directories ###
+node_modules/
+vendor/
+.bower_components/
+dist/
+build/
+target/
+.gradle/
+
+### 6. Environment files ###
+.env
+.env.local
+.env.*.local    
+!.env.example
+### 7. Temporary files ###ßßßßß
+*.tmp
+*.swp
+*~
+
+### 8. Secrets ###
+secrets.yml
+credentials.json
+apikeys.txt
+config/secret_config.yml
+config/credentials.json
+config/apikeys.txt
+application/secrets.yml
+application-secrets.properties
+keystore.jks
+id_rsa
+id_rsa.pub
