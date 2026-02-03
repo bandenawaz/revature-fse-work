@@ -17,5 +17,6 @@ public class SecurityGate {
         System.out.println("Passenger: " + passengerName + " is allowed to board the plane: "
                 +passengerHasBoardingPass);
 
+        
     }
 }
