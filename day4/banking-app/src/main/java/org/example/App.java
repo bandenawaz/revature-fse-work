@@ -13,12 +13,12 @@ public class App
         TransferController controller = new TransferController();
 
         System.out.println("---- Scenario 1: Successful Transfer ----");
-        controller.postTransger(10000.00);
+        controller.processTransferRequest("Abi",250.00);
 
         System.out.println("\n---- Scenario 2: User Error (Over Draft) ----");
-        controller.postTransger(150000.0);
+        controller.processTransferRequest("Nagendra",15000.0);
 
-        System.out.println("\n---- Scenario 3: System Error (Triggered Manually for Demo ----");
+        //System.out.println("\n---- Scenario 3: System Error (Triggered Manually for Demo ----");
 
 
     }
