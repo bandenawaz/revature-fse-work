@@ -1,9 +1,9 @@
-package org.example.config;
+package com.securebank.config;
 
-import org.example.db.DBConnection;
-import org.example.service.AccountService;
-import org.example.service.NotificationService;
-import org.example.service.ReportService;
+import com.securebank.db.DBConnection;
+import com.securebank.service.AccountService;
+import com.securebank.service.NotificationService;
+import com.securebank.service.ReportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +14,7 @@ public class BankConfig {
     //Lets create Object
     @Bean
     public NotificationService notificationService(){
-        return new NotificationService("smpt.securebank.com");
+        return new NotificationService("smtp.securebank.com");
     }
 
     @Bean

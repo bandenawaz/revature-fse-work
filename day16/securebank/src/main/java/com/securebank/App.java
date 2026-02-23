@@ -1,8 +1,8 @@
-package org.example;
+package com.securebank;
 
-import org.example.config.BankConfig;
-import org.example.service.AccountService;
-import org.example.service.ReportService;
+import com.securebank.config.BankConfig;
+import com.securebank.service.AccountService;
+import com.securebank.service.ReportService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -32,9 +32,8 @@ public class App
         // PROOF: Lets list all the beans created by itself
         System.out.println("\n********* BEANS SPRING CREATED ***********\n");
         for(String name : context.getBeanDefinitionNames()){
-            if (name.contains("securebank")){
+
                 System.out.println(" Bean: " + name);
-            }
         }
 
         // SINGLETON PROOF: same oject everytime

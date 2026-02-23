@@ -1,4 +1,4 @@
-package org.example.service;
+package com.securebank.service;
 
 public class NotificationService {
 
