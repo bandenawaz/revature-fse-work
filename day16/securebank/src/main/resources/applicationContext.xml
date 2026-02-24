@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- BEAN 1: Audit Logger - setter injection -->
+    <bean id="auditLogger" class="com.securebank.model.AuditLogger">
+        <property name="logFile" value="/var/log/securebank/audit.log" />
+        <property name="detailedLogging" value="true" />
+    </bean>
+
+    <!-- BEAN 2: Transaction Ledger - constructor injection -->
+    <bean id="transactionLedger" class="com.securebank.model.TransactionLedger">
+        <constructor-arg value="MainLedger-2024" />
+        <constructor-arg value="USD"/>
+
+        <property name="transactionLimit" value="100000.00"/>
+        <property name="allowedbranches">
+            <list>
+                <value>New York HQ</value>
+                <value>Delhi Branch</value>
+                <value>Abu Dhabi Branch</value>
+                <value>Chicago Branch</value>
+            </list>
+        </property>
+
+    </bean>
+
+    <!-- BEAN 3: TransactionService - ref = refering another bean -->
+    <bean id="transactionService" class="com.securebank.service.TransactionService">
+        <constructor-arg ref="transactionLedger"/>
+        <constructor-arg ref="auditLogger"/>
+
+    </bean>
+
+
+</beans>

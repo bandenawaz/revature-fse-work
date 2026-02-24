@@ -1,9 +1,8 @@
 package com.securebank.config;
 
 import com.securebank.db.DBConnection;
-import com.securebank.service.AccountService;
-import com.securebank.service.NotificationService;
-import com.securebank.service.ReportService;
+import com.securebank.interfaces.PaymentNetwork;
+import com.securebank.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,5 +31,35 @@ public class BankConfig {
     @Bean
     public ReportService reportService(){
         return new ReportService(dbConnection());
+    }
+
+    @Bean
+    public PaymentNetwork paymentNetwork(){
+        return new RTGSNetwork("SECB0001");
+    }
+
+    @Bean
+    public PaymentProcessor paymentProcessor(){
+        return new PaymentProcessor(paymentNetwork());
+    }
+
+    @Bean
+    public CreditScoringSystem creditScoringSystem(){
+        return new CreditScoringSystem();
+    }
+
+    @Bean
+    public InsuranceService insuranceService(){
+        return new InsuranceService("TrustShield insurance");
+    }
+
+    @Bean
+    public LoanService loanService(){
+        //TYPE 1: constuctor inject - mandatory dep
+        LoanService loanService = new LoanService(creditScoringSystem(), 500_000.00);
+
+        //TYPE 2: setter injection - optional dep
+        loanService.setInsuranceService(insuranceService());
+        return loanService;
     }
 }
