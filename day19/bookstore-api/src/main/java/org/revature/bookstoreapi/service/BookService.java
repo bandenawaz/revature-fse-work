@@ -9,73 +9,94 @@ import org.revature.bookstoreapi.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class BookService {
 
     private final BookRepository bookRepository;
 
-    // CREATE
-    @Transactional // if anything fails midway the entire operations roll back
+    // ── CREATE ──────────────────────────────────────────────────
+    @Transactional   // If anything fails mid-way, the entire operation rolls back
     public Book createBook(Book book) {
-
-        //BUSINESS RULE: ISBN must be unique
+        // Business rule: ISBN must be unique
         if (bookRepository.existsByIsbn(book.getIsbn())) {
             throw new DuplicateResourceException(
-                    "Book with ISBN "+book.getIsbn() + " already exists"
-            );
+                    "Book with ISBN " + book.getIsbn() + " already exists");
         }
-        Book savedBook = bookRepository.save(book);
-        log.info("Book created with ID: {}", savedBook.getId());
-        return savedBook;
+        Book saved = bookRepository.save(book);
+        // Hibernate generates: INSERT INTO books (title, author, isbn, ...) VALUES (?, ?, ?, ...)
+        log.info("Book created with id: {}", saved.getId());
+        return saved;
     }
 
-    //Lets fetch all books
-    public List<Book> getAllBooks() {
+    // ── READ ALL ────────────────────────────────────────────────
+    public List<Book> getAllBooks(String author, String genre) {
+        if (author != null && genre != null) {
+            return bookRepository.findByAuthorAndGenre(author, genre);
+            // WHERE author = ? AND genre = ?
+        } else if (author != null) {
+            return bookRepository.findByAuthor(author);
+            // WHERE author = ?
+        } else if (genre != null) {
+            return bookRepository.findByGenre(genre);
+            // WHERE genre = ?
+        }
         return bookRepository.findAll();
+        // SELECT * FROM books
     }
 
-    //Fetch book by id
+    // ── READ ONE ────────────────────────────────────────────────
     public Book getBookById(Long id) {
-
         return bookRepository.findById(id)
+                // findById returns Optional<Book> — it may or may not have a value
                 .orElseThrow(() -> new ResourceNotFoundException("Book", id));
-
+        // If empty Optional → throw exception → GlobalExceptionHandler → 404
+        // Hibernate: SELECT * FROM books WHERE id = ?
     }
 
-    //update book
+    // ── UPDATE ──────────────────────────────────────────────────
     @Transactional
-    public Book updateBook(Long id, Book book) {
-        Book existingBook = getBookById(id);
-        if (book.getTitle() != null) {
-            existingBook.setTitle(book.getTitle());
-        }
-
-        if (book.getPrice() != null) {
-            existingBook.setPrice(book.getPrice());
-        }
-        if (book.getGenre() != null) {
-            existingBook.setGenre(book.getGenre());
-        }
-        if (book.getStockQuantity() != null) {
-            existingBook.setStockQuantity(book.getStockQuantity());
-        }
-        log.info("Book updated with ID: {}", existingBook.getId());
-        return bookRepository.save(existingBook);
+    public Book updateBookPrice(Long id, BigDecimal newPrice) {
+        Book book = getBookById(id);   // throws 404 if not found
+        book.setPrice(newPrice);
+        return bookRepository.save(book);
+        // Hibernate detects the price changed → UPDATE books SET price = ? WHERE id = ?
+        // Only the changed column is updated — not the whole row
     }
 
-    //DELETE
+    @Transactional
+    public Book updateBook(Long id, Book updatedBook) {
+        Book existing = getBookById(id);
+
+        // Update only non-null fields (PATCH semantics)
+        if (updatedBook.getTitle() != null)    existing.setTitle(updatedBook.getTitle());
+        if (updatedBook.getPrice() != null)    existing.setPrice(updatedBook.getPrice());
+        if (updatedBook.getGenre() != null)    existing.setGenre(updatedBook.getGenre());
+        if (updatedBook.getPublishedDate() != null)    existing.setPublishedDate(updatedBook.getPublishedDate());
+        if (updatedBook.getStockQuantity() != null) existing.setStockQuantity(updatedBook.getStockQuantity());
+
+        return bookRepository.save(existing);
+        // Hibernate: UPDATE books SET title=?, price=?, ... WHERE id=?
+    }
+
+    // ── DELETE ──────────────────────────────────────────────────
     @Transactional
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
-            log.error("Book with ID {} does not exist", id);
             throw new ResourceNotFoundException("Book", id);
-
         }
         bookRepository.deleteById(id);
+        // Hibernate: DELETE FROM books WHERE id = ?
+    }
+
+    // ── SEARCH ──────────────────────────────────────────────────
+    public List<Book> getBooksByPriceRange(BigDecimal min, BigDecimal max) {
+        return bookRepository.findByPriceBetween(min, max);
+        // WHERE price BETWEEN ? AND ?
     }
 }
