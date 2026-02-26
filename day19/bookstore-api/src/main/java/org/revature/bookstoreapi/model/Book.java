@@ -36,7 +36,7 @@ public class Book {
 
 
     /*
-    Hibernate rwads every @Entity class and generates SQL query automatically
+    Hibernate reads every @Entity class and generates SQL query automatically
     create table books(
     id BIGINT NOT NULL AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
