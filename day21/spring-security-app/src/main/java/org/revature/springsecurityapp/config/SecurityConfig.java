@@ -17,43 +17,68 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity  //Activates Spring Security's web security support
 public class SecurityConfig {
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/public/**").permitAll()
+//                        //For everything else just require authentication
+//                // the fine grained role checks happen at the method level
+//                        .anyRequest().authenticated()
+//                ).httpBasic(Customizer.withDefaults());
+//        return http.build();
+//    }
+//
+//
+//    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//        UserDetails customer = User.builder()
+//                .username("alice")
+//                .password(passwordEncoder.encode("alice@123"))
+//                .roles("CUSTOMER")
+//                .build();
+//
+//        UserDetails manager = User.builder()
+//                .username("bob")
+//                .password(passwordEncoder.encode("bob@123"))
+//                .roles("MANAGER")
+//                .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("carol")
+//                .password(passwordEncoder.encode("carol@123"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(customer, manager, admin);
+//
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
-                        //For everything else just require authentication
-                // the fine grained role checks happen at the method level
                         .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults());
+        )
+                .httpBasic(Customizer.withDefaults())
+                //Required for H2 console to render correctly in browser
+                .headers(headers -> headers.frameOptions(
+                        frame -> frame.sameOrigin()
+                ));
+
         return http.build();
     }
 
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails customer = User.builder()
-                .username("alice")
-                .password(passwordEncoder.encode("alice@123"))
-                .roles("CUSTOMER")
-                .build();
 
-        UserDetails manager = User.builder()
-                .username("bob")
-                .password(passwordEncoder.encode("bob@123"))
-                .roles("MANAGER")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("carol")
-                .password(passwordEncoder.encode("carol@123"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(customer, manager, admin);
-
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
