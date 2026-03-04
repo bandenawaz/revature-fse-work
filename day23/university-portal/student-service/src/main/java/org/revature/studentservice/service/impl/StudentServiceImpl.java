@@ -30,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
         student.setStudentName(studentDTO.getStudentName());
         student.setStudentEmail(studentDTO.getStudentEmail());
         student.setStudentDepartment(studentDTO.getStudentDepartment());
-        student.setYear(studentDTO.getYear());
+        student.setAcademicYear(studentDTO.getAcademicYear());
         return studentRepository.save(student);
     }
 
@@ -52,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setStudentName(studentDTO.getStudentName());
         existingStudent.setStudentEmail(studentDTO.getStudentEmail());
         existingStudent.setStudentDepartment(studentDTO.getStudentDepartment());
-        existingStudent.setYear(studentDTO.getYear());
+        existingStudent.setAcademicYear(studentDTO.getAcademicYear());
         return studentRepository.save(existingStudent);
     }
 

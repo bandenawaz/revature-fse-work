@@ -12,10 +12,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,7 +41,7 @@ class StudentControllerTest {
         studentDTO.setStudentName("Arjun Sharma");
         studentDTO.setStudentEmail("arjun@university.edu");
         studentDTO.setStudentDepartment("Computer Science");
-        studentDTO.setYear(2);
+        studentDTO.setAcademicYear(2);
 
 
         Student savedStudent = new Student(

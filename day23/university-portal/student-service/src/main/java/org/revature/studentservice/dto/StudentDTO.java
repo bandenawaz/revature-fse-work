@@ -7,5 +7,5 @@ public class StudentDTO {
     private String studentName;
     private String studentEmail;
     private String studentDepartment;
-    private int year;
+    private int academicYear;
 }

@@ -26,5 +26,6 @@ public class Student {
     @Column(nullable = false)
     private String studentDepartment;
 
-    private int year;
+    @Column(name = "academic_year")
+    private int academicYear;
 }

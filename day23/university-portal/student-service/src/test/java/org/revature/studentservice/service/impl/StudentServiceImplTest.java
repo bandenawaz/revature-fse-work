@@ -13,7 +13,6 @@ import org.revature.studentservice.repository.StudentRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +34,7 @@ class StudentServiceImplTest {
         studentDTO.setStudentName("Arjun Sharma");
         studentDTO.setStudentEmail("arjun@uni.edu");
         studentDTO.setStudentDepartment("CSE");
-        studentDTO.setYear(2);
+        studentDTO.setAcademicYear(2);
 
         student = new Student(
                 1L, "Arjun Sharma",
