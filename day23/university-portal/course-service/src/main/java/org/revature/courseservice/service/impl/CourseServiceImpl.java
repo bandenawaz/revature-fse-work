@@ -126,7 +126,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllCoursesByTag(String tagName) {
-        return courseRepository.findByTagsName(tagName);
+        return courseRepository.findByTags_TagName(tagName);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course enrolleStudent(Long courseId, Long studentId) {
+    public Course enrolledStudent(Long courseId, Long studentId) {
         Course course = getCourseById(courseId);
         if (course.getEnrolledStudentIds().contains(studentId)) {
             throw new RuntimeException("Student already enrolled in this course");
@@ -158,6 +158,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourse(Long courseId) {
+        Course course = getCourseById(courseId);
+        courseRepository.delete(course);
 
     }
 }

@@ -15,6 +15,6 @@ public interface CourseService {
     List<Course> getAllCourses();
     List<Course> getAllCoursesByTag(String tagName);
     Course addModuleToCourse(Long courseId,ModuleDTO moduleDTO);
-    Course enrolleStudent(Long courseId,Long studentId);
+    Course enrolledStudent(Long courseId, Long studentId);
     void deleteCourse(Long courseId);
 }
