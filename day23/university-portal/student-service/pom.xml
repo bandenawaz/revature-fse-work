@@ -79,6 +79,13 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <!-- Spring Cloud discovery client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
         <!-- security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
