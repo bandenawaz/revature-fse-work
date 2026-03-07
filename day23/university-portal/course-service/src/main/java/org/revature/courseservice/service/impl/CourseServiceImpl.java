@@ -3,9 +3,8 @@ package org.revature.courseservice.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.revature.courseservice.dto.CourseDTO;
-import org.revature.courseservice.dto.InstructorDTO;
-import org.revature.courseservice.dto.ModuleDTO;
+import org.revature.courseservice.client.StudentClient;
+import org.revature.courseservice.dto.*;
 import org.revature.courseservice.entity.Course;
 import org.revature.courseservice.entity.Instructor;
 import org.revature.courseservice.entity.Module;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +29,7 @@ public class CourseServiceImpl implements CourseService {
     private final InstructorRepository instructorRepository;
     private final TagRepository tagRepository;
     private final ModuleRepository moduleRepository;
+    private final StudentClient studentClient;
 
 
     @Override
@@ -161,5 +162,35 @@ public class CourseServiceImpl implements CourseService {
         Course course = getCourseById(courseId);
         courseRepository.delete(course);
 
+    }
+
+    /**
+     * Get a course with full student details for enrolled students
+     */
+    public CourseWithStudentsDTO getCourseWithStudents(Long courseId, String authToken){
+        Course course = getCourseById(courseId);
+
+        /**
+         * Feign call - looks like a local method call
+         * Under the hood: GET http://student-service/api/v1/students/{id}
+         * With load balancing across all student-service instances
+         */
+        List<StudentDTO> enrolledStudents = course.getEnrolledStudentIds()
+                .stream()
+                .map(studentId -> {
+                    try{
+                        return studentClient.getStudentById(studentId, authToken);
+                    } catch (Exception e) {
+                        log.error("Could not fetch student {}: {}", studentId, e.getMessage());
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        CourseWithStudentsDTO dto = new CourseWithStudentsDTO();
+        dto.setCourse(course);
+        dto.setEnrolledStudents(enrolledStudents);
+        return dto;
     }
 }

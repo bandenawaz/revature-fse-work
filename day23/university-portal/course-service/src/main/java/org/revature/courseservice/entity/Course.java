@@ -24,6 +24,8 @@ public class Course {
     @Column(length = 1000)
     private String courseDescription;
 
+    @Column(nullable = false)
+    private int maxSeats = 60;   // default 60 seats per course
     private int courseCredits;
     private boolean isCourseActive;
 
